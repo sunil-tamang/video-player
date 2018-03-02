@@ -1,0 +1,202 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+        
+            <!-- Max Video -Container -->
+        <div id="max-container">
+
+
+            <!---Container -->
+                    <div id="container">
+                            <video id="video">
+                        <source src="vid.mp4" type="video/mp4">
+                    </video>
+
+               </div>    
+
+            <!--Video controls-->
+                <div id="controls">
+
+
+                      <span class="progress">
+                            <progress id="progress" value="0" min="0">
+                                <span id="progress-bar"></span>
+                            </progress>
+                    </span>
+
+                     <span class="play-btn">
+                        <button  class="play" onclick="play()" type="button"><img src="Controls/play-button.svg"/></button>
+                        <button class="pause" onclick="play()" type="button"><img src="Controls/pause.svg"/></button>
+                     </span>
+
+                     <span class="vol-btn">
+                        <button class="unmute" onclick="mute()" type="button"><img src="Controls/speaker%20(2).svg"></button>
+                        <button class="mute"onclick="mute()"   type="button"><img src="Controls/speaker.svg"></button>
+                    </span>
+                   
+
+
+                    <span class="full-btn" id="fs" >
+                         <button class="fullscreen"  type="button"><img src="Controls/expand.svg"></button>
+                         <button class="smallscreen"   type="button"><img src="Controls/collapse.svg"></button>
+                    </span>
+
+        </div>
+
+            
+        </div>    
+
+        <script>
+
+
+        //Connecting Selectors
+                var videoContainer = document.getElementById('container');
+                var controls = document.getElementById('controls');
+                var video = document.getElementById("video"); 
+
+
+        //Play Pause video       
+                function play(){
+                            if(!video.paused && !video.ended){
+                                    video.pause();
+                                }else{
+                                    video.play();
+                           }
+        }
+
+
+        //Mute unmute button 
+                   function mute(){
+                       video.muted = !video.muted;
+                   } 
+
+
+         // Toggle buttons on click
+                $('.play-btn').on('click', function() {
+                  $('.play, .pause').toggle();
+        });
+
+                $('.vol-btn').on('click', function() {
+                  $('.unmute, .mute').toggle();
+        });
+
+                $('.full-btn').on('click', function() {
+                  $('.fullscreen, .smallscreen').toggle();
+        });
+
+
+         // toggle button class when finished
+                video.onended = function(e) {
+                  $('.play, .pause, .unmute, .mute, ').toggle();
+        };
+
+            // Hide the default controls
+                video.controls = false;
+
+        // Display the user defined video controls
+            controls.style.display = 'block';
+
+
+              var progress = document.getElementById('progress');
+        var progressBar = document.getElementById('progress-bar');
+
+            video.addEventListener('loadedmetadata', function() {
+           progress.setAttribute('max', video.duration);
+        });
+
+            video.addEventListener('timeupdate', function() {
+           progress.value = video.currentTime;
+           progressBar.style.width = Math.floor((video.currentTime / video.duration) * 100) + '%';
+        });
+
+            video.addEventListener('timeupdate', function() {
+           if (!progress.getAttribute('max')) progress.setAttribute('max', video.duration);
+           progress.value = video.currentTime;
+           progressBar.style.width = Math.floor((video.currentTime / video.duration) * 100) + '%';
+        });
+
+            progress.addEventListener('click', function(e) {
+           var pos = (e.pageX  - this.offsetLeft) / this.offsetWidth;
+           video.currentTime = pos * video.duration;
+        });
+
+
+        //fullscreen video
+
+             var fullscreen = document.getElementById('fs');
+
+        //Check if browser supports full screen API
+            var fullScreenEnabled = !!(document.fullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled || document.webkitSupportsFullscreen || document.webkitFullscreenEnabled || document.createElement('video').webkitRequestFullScreen);
+
+
+        //check if Fullscreen is Enabled or not
+            if (!fullScreenEnabled) {
+           fullscreen.style.display = 'none';
+        }
+
+         //On click Event Listener
+            fs.addEventListener('click', function() {
+           handleFullscreen();
+        });
+
+            var handleFullscreen = function() {
+           if (isFullScreen()) {
+              if (document.exitFullscreen) document.exitFullscreen();
+              else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+              else if (document.webkitCancelFullScreen) document.webkitCancelFullScreen();
+              else if (document.msExitFullscreen) document.msExitFullscreen();
+              setFullscreenData(false);
+
+           }
+           else {
+              if (videoContainer.requestFullscreen) videoContainer.requestFullscreen();
+              else if (videoContainer.mozRequestFullScreen) videoContainer.mozRequestFullScreen();
+              else if (videoContainer.webkitRequestFullScreen) videoContainer.webkitRequestFullScreen();
+              else if (videoContainer.msRequestFullscreen) videoContainer.msRequestFullscreen();
+              setFullscreenData(true);
+           }
+        }
+
+        //First of all the function checks if the browser is already in fullscreen mode by calling another function isFullScreen:
+            var isFullScreen = function() {
+           return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || document.fullscreenElement);
+        }
+
+        // sets the value of a data-fullscreen attribute on the videoContainer
+            var setFullscreenData = function(state) {
+           videoContainer.setAttribute('data-fullscreen', !!state);
+        }
+
+        // When a video goes into fullscreen mode, it usually displays a message indicating that the user can press the Esc key to exit fullscreen mode
+        document.addEventListener('fullscreenchange', function(e) {
+           setFullscreenData(!!(document.fullScreen || document.fullscreenElement));
+        });
+
+        document.addEventListener('webkitfullscreenchange', function() {
+           setFullscreenData(!!document.webkitIsFullScreen);
+        });
+
+        document.addEventListener('mozfullscreenchange', function() {
+           setFullscreenData(!!document.mozFullScreen);
+        });
+
+        document.addEventListener('msfullscreenchange', function() {
+           setFullscreenData(!!document.msFullscreenElement);
+        });
+
+
+
+
+
+
+
+ </script>
+
+</body>
+</html>

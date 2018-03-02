@@ -1,0 +1,48 @@
+<html>
+<head>
+    <style>
+        *{
+            padding: 0;
+            margin:0;
+        }
+        #container
+        {   
+            width:100%;
+            height:100%;
+            overflow: hidden;
+            z-index: -1000;
+            top:0;
+            left:0;
+            cursor: pointer;
+        }
+        video{
+            min-width:100%;
+            min-height:100%;
+
+        }
+    
+    </style>    
+</head>
+<body>
+<div id="container">
+    
+  <video id="video1" width="480"  onmouseover="Play()" onmouseout="Pause()">
+        <source src="vid.MP4" type="video/mp4" />
+    </video>
+
+</div>    
+<script type="text/javascript"> 
+
+    var myVideo=document.getElementById("video1"); 
+
+    function Pause(){ 
+            myVideo.pause(); 
+        }
+    function Play(){
+        if (myVideo.paused) 
+            myVideo.play();     
+        }   
+    
+</script> 
+</body>
+</html>
